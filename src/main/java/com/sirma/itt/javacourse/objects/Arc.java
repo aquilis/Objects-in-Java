@@ -1,42 +1,43 @@
 package com.sirma.itt.javacourse.objects;
 
 /**
- * A class implementing a geometric arc.
+ * A class implementing a geometric arc. The arc is constructed using the
+ * implementation of the circle, plus two angles (alpha, beta) representing what
+ * part of the circle will be sliced to construct the geometric arc.
  */
 @SuppressWarnings("unused")
 public class Arc extends Circle {
 
-	private int angle;
-	private final int length;
+	private final int angleAlpha;
+	private final int angleBeta;
 
 	/**
-	 * Four-parameters constructor.
+	 * 4 parameters constructor.
 	 * 
-	 * @param x
-	 *            is x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param radius
-	 *            is the radius of the arc
-	 * @param length
-	 *            is the length of the arc
+	 *            is the radius of the base circle
+	 * @param alpha
+	 *            is the the first angle used to construct the arc
+	 * @param beta
+	 *            is the second angle used to construct the arc
 	 */
-	public Arc(int x, int y, int radius, int length) {
-		super(x, y, radius);
-		this.length = length;
+	public Arc(Point origin, int radius, int alpha, int beta) {
+		super(origin, radius);
+		this.angleAlpha = alpha;
+		this.angleBeta = beta;
 	}
 
 	/**
 	 * Default constructor. Set all values to zero
 	 */
 	public Arc() {
-		super(0, 0, 0);
-		this.length = 0;
+		super(new Point(0, 0), 0);
+		this.angleAlpha = 0;
+		this.angleBeta = 0;
 	}
 
-	/**
-	 * Draws the arc. Not yet implemented. {@inheritDoc}
-	 */
 	@Override
 	public void draw() {
 	}

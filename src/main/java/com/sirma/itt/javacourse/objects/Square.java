@@ -11,15 +11,13 @@ public class Square extends Figure {
 	private final int sideA;
 
 	/**
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param sideA
 	 *            is the length of side A in pixels
 	 */
-	public Square(int x, int y, int sideA) {
-		super(x, y);
+	public Square(Point origin, int sideA) {
+		super(origin);
 		this.sideA = sideA;
 	}
 
@@ -27,7 +25,7 @@ public class Square extends Figure {
 	 * default constructor.
 	 */
 	public Square() {
-		super(0, 0);
+		super(new Point(0, 0));
 		this.sideA = 0;
 	}
 

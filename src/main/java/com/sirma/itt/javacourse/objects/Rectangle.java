@@ -11,17 +11,15 @@ public class Rectangle extends Square {
 	private final int sideB;
 
 	/**
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param sideA
 	 *            is the length of side A i pixels
 	 * @param sideB
 	 *            is the lenth of side B in pixels
 	 */
-	public Rectangle(int x, int y, int sideA, int sideB) {
-		super(x, y, sideA);
+	public Rectangle(Point origin, int sideA, int sideB) {
+		super(origin, sideA);
 		this.sideB = sideB;
 	}
 
@@ -29,7 +27,7 @@ public class Rectangle extends Square {
 	 * default constructor.
 	 */
 	public Rectangle() {
-		super(0, 0, 0);
+		super(new Point(0, 0), 0);
 		this.sideB = 0;
 	}
 

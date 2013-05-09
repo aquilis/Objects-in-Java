@@ -3,33 +3,47 @@ package com.sirma.itt.javacourse.objects;
 import java.util.ArrayList;
 
 /**
- * Implemets a random poly line consisting of arcs and lines.
- * 
- * @author vtsonev
+ * Implemets a random poly line constructed by a sequence of arcs and lines.
  */
 @SuppressWarnings("unused")
 public class PolyLine extends Figure {
 
-	private final ArrayList<Line> myLines;
-	private final ArrayList<Arc> myArcs;
+	/**
+	 * A sequence of arc and line objects to construct the poly line.
+	 */
+	private final ArrayList<Figure> listArcsLines;
 
 	/**
-	 * The constructor gets the x and y of the origin and takes a list of lines
-	 * and a list of arcs to construct the poly line.
+	 * Iterates through all array elements to make sure there are no other types
+	 * of figures excpet Arcs and Lines. If other types are found,
+	 * IllegalArgumentException is thrown.
 	 * 
-	 * @param x
-	 *            is the x of the figure origin.
-	 * @param y
-	 *            is the y of the figure origin
-	 * @param myLines
-	 *            is an array list of lines to be drawn as part of the poly line
-	 * @param myArcs
-	 *            is an array list of arcs to be drawn a a part of the poly line
+	 * @param arcsLines
+	 *            is the input array list to validate
 	 */
-	public PolyLine(int x, int y, ArrayList<Line> myLines, ArrayList<Arc> myArcs) {
-		super(x, y);
-		this.myLines = myLines;
-		this.myArcs = myArcs;
+	private void validateInputFigures(ArrayList<Figure> arcsLines) {
+		for (Figure fig : arcsLines) {
+			if ((!fig.getClass().equals(Arc.class))
+					&& (!fig.getClass().equals(Line.class))) {
+				throw new IllegalArgumentException(
+						"\nThe poly line can be constructed of arcs and lines only.");
+			}
+		}
+	}
+
+	/**
+	 * 2 parameters constructor.
+	 * 
+	 * @param origin
+	 *            is a Point instance to be the orgin of the figure
+	 * @param arcsLines
+	 *            is an arraylist consisting of arc and line instances that will
+	 *            construct the polyline.
+	 */
+	public PolyLine(Point origin, ArrayList<Figure> arcsLines) {
+		super(origin);
+		validateInputFigures(arcsLines);
+		this.listArcsLines = arcsLines;
 	}
 
 	@Override

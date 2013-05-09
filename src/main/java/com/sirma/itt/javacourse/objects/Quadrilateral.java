@@ -12,10 +12,8 @@ public class Quadrilateral extends Parallelogram {
 	private final int sideD;
 
 	/**
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origb
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param sideA
 	 *            is the length of side A in pixels
 	 * @param sideB
@@ -27,9 +25,9 @@ public class Quadrilateral extends Parallelogram {
 	 * @param angleA
 	 *            is the angle of edge A in degrees
 	 */
-	public Quadrilateral(int x, int y, int sideA, int sideB, int sideC,
+	public Quadrilateral(Point origin, int sideA, int sideB, int sideC,
 			int sideD, int angleA) {
-		super(x, y, sideA, sideB, angleA);
+		super(origin, sideA, sideB, angleA);
 		this.sideC = sideC;
 		this.sideD = sideD;
 	}
@@ -38,7 +36,7 @@ public class Quadrilateral extends Parallelogram {
 	 * default constructor.
 	 */
 	public Quadrilateral() {
-		super(0, 0, 0, 0, 0);
+		super(new Point(0, 0), 0, 0, 0);
 		this.sideC = 0;
 		this.sideD = 0;
 	}

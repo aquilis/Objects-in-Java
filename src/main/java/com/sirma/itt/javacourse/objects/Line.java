@@ -9,19 +9,17 @@ public class Line extends Figure {
 	private final Point end;
 
 	/**
-	 * Four-parameters constructor.
+	 * 3 parameters constructor.
 	 * 
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param x2
 	 *            is the x of the end point of the line
 	 * @param y2
 	 *            is the y of the end point of the line
 	 */
-	public Line(int x, int y, int x2, int y2) {
-		super(x, y);
+	public Line(Point origin, int x2, int y2) {
+		super(origin);
 		this.end = new Point(x2, y2);
 	}
 
@@ -29,7 +27,7 @@ public class Line extends Figure {
 	 * Default constructor. Sets all values to 0.
 	 */
 	public Line() {
-		super(0, 0);
+		super(new Point(0, 0));
 		this.end = new Point(0, 0);
 	}
 

@@ -12,12 +12,10 @@ public class Parallelogram extends Rectangle {
 	private final int angleA;
 
 	/**
-	 * 5 - parameters constructor.
+	 * 4 parameters constructor.
 	 * 
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure orign
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param sideA
 	 *            is the length of side A of the figure in pixels
 	 * @param sideB
@@ -25,8 +23,8 @@ public class Parallelogram extends Rectangle {
 	 * @param angleA
 	 *            is the angle of edge A of the parallelogram
 	 */
-	public Parallelogram(int x, int y, int sideA, int sideB, int angleA) {
-		super(x, y, sideA, sideB);
+	public Parallelogram(Point origin, int sideA, int sideB, int angleA) {
+		super(origin, sideA, sideB);
 		this.angleA = angleA;
 	}
 
@@ -34,7 +32,7 @@ public class Parallelogram extends Rectangle {
 	 * default constructor.
 	 */
 	public Parallelogram() {
-		super(0, 0, 0, 0);
+		super(new Point(0, 0), 0, 0);
 		this.angleA = 0;
 	}
 

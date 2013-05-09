@@ -13,7 +13,12 @@ package com.sirma.itt.javacourse.objects;
  */
 @SuppressWarnings("unused")
 public class BinarySearchTree<T extends Comparable<T>> {
-
+	/**
+	 * Enumerable type telling the method if we are ataching left or right node.
+	 */
+	private enum Position {
+		RIGHT, LEFT
+	}
 	private final Node root;
 
 	/**
@@ -33,12 +38,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	 */
 	public void addElement(T value) {
 		int compare = value.compareTo(this.root.value);
-		addElement(value, null, this.root, compare > 0 ? "right" : "left");
+		if (compare > 0) {
+			addElement(value, null, this.root, Position.RIGHT);
+		} else {
+			addElement(value, null, this.root, Position.LEFT);
+		}
 	}
 
 	/**
 	 * Recursive method adding the given value into the binary search tree.
-	 *
+	 * 
 	 * @param value
 	 *            is the value to be added to the tree
 	 * @param parent
@@ -46,28 +55,24 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	 * @param node
 	 *            is the current node
 	 * @param nodePos
-	 *            is a string telling the method if we are attaching left or
-	 *            right child
+	 *            is telling the method if we are attaching left or right child
 	 */
 	private void addElement(T value, Node parent, Node node,
-			String nodePos) {
+ Position nodePos) {
 		if (node == null) {
-			if ("left".equals(nodePos)) {
+			if (nodePos == Position.LEFT) {
 				parent.left = new Node(value);
 				parent.left.setParent(parent);
-			} else {
-				if ("right".equals(nodePos)) {
-					parent.right = new Node(value);
-					parent.right.setParent(parent);
-				}
+			} else if (nodePos == Position.RIGHT) {
+				parent.right = new Node(value);
+				parent.right.setParent(parent);
+
 			}
 		} else {
 			if (value.compareTo(node.value) < 0) {
-				addElement(value, node, node.left, "left");
-			} else {
-				if (value.compareTo(node.value) > 0) {
-					addElement(value, node, node.right, "right");
-				}
+				addElement(value, node, node.left, Position.LEFT);
+			} else if (value.compareTo(node.value) > 0) {
+				addElement(value, node, node.right, Position.RIGHT);
 			}
 		}
 	}
@@ -127,6 +132,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	/**
 	 * A binary node. Has left and right child nodes only.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private class Node implements Comparable<Node> {
 		private final T value;
 		private Node parent;
@@ -190,30 +196,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		}
 		
 		/**
-		 * Returns the hash code of the node value.
-		 * 
-		 * @return the hash code of the node value.
-		 */
-		@Override
-		public int hashCode() {
-			return this.value.hashCode();
-		}
-		
-		/**
-		 * Implementing the equals method.
-		 * 
-		 * @param obj
-		 *            is the object to compare to.
-		 * @return true if the compareTo() returns 0.
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			@SuppressWarnings("unchecked")
-			Node other = (Node) obj;
-			return this.compareTo(other) == 0;
-		}
-		
-		/**
 		 * Overriding the compareTo method to compare the values of the nodes.
 		 * 
 		 * @param other
@@ -223,6 +205,62 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		@Override
 		public int compareTo(Node other) {
 			return this.value.compareTo(other.value);
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((left == null) ? 0 : left.hashCode());
+			result = prime * result
+					+ ((parent == null) ? 0 : parent.hashCode());
+			result = prime * result + ((right == null) ? 0 : right.hashCode());
+			result = prime * result + ((value == null) ? 0 : value.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Node other = (Node) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (left == null) {
+				if (other.left != null)
+					return false;
+			} else if (!left.equals(other.left))
+				return false;
+			if (parent == null) {
+				if (other.parent != null)
+					return false;
+			} else if (!parent.equals(other.parent))
+				return false;
+			if (right == null) {
+				if (other.right != null)
+					return false;
+			} else if (!right.equals(other.right))
+				return false;
+			if (value == null) {
+				if (other.value != null)
+					return false;
+			} else if (!value.equals(other.value))
+				return false;
+			return true;
+		}
+
+		/**
+		 * Auto generated.
+		 * 
+		 * @return the outer type of the tree.
+		 */
+		private BinarySearchTree getOuterType() {
+			return BinarySearchTree.this;
 		}
 	}
 

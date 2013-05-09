@@ -11,31 +11,26 @@ public class Circle extends Figure {
 	private final int radius;
 
 	/**
-	 * 3 - parameters constructor.
+	 * 2 parameters constructor.
 	 * 
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 * @param radius
 	 *            is the radius of the sphere
 	 */
-	public Circle(int x, int y, int radius) {
-		super(x, y);
+	public Circle(Point origin, int radius) {
+		super(origin);
 		this.radius = radius;
 	}
 
 	/**
-	 * Default constructor. Set all values to 0.
+	 * Default constructor. Sets all values to 0.
 	 */
 	public Circle() {
-		super(0, 0);
+		super(new Point(0, 0));
 		this.radius = 0;
 	}
 
-	/**
-	 * Draws the circle. Not yet implemented. {@inheritDoc}
-	 */
 	@Override
 	public void draw() {
 

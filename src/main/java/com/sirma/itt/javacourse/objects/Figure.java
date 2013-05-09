@@ -14,16 +14,13 @@ public abstract class Figure {
 	public abstract void draw();
 
 	/**
-	 * A two-parameters constructor.
+	 * Construct the figure with a specified origin point.
 	 * 
-	 * @param x
-	 *            is the x of the figure origin.
-	 * @param y
-	 *            is the y of the figure origin.
+	 * @param origin
+	 *            is a Point instance to be the origin of the figure
 	 */
-	public Figure(int x, int y) {
-		this.origin.setX(x);
-		this.origin.setY(y);
+	public Figure(Point origin) {
+		this.origin = origin;
 	}
 
 	/**

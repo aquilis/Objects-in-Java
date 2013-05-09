@@ -11,17 +11,15 @@ public class Rhombus extends Square {
 	private final int angleA;
 
 	/**
-	 * @param x
-	 *            is the x of the figure origin
-	 * @param y
-	 *            is the y of the figure origin
+	 * @param origin
+	 *            is a Point instance to be the orgin of the figure
 	 * @param sideA
 	 *            is the length of side A in pixels
 	 * @param angleA
 	 *            s the length of side B in pixels
 	 */
-	public Rhombus(int x, int y, int sideA, int angleA) {
-		super(x, y, sideA);
+	public Rhombus(Point origin, int sideA, int angleA) {
+		super(origin, sideA);
 		this.angleA = angleA;
 	}
 
@@ -29,7 +27,7 @@ public class Rhombus extends Square {
 	 * default constructor.
 	 */
 	public Rhombus() {
-		super(0, 0, 0);
+		super(new Point(0, 0), 0);
 		this.angleA = 0;
 	}
 
