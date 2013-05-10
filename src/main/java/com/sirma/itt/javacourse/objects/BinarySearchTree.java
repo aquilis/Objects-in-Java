@@ -1,43 +1,58 @@
 package com.sirma.itt.javacourse.objects;
 
 /**
- * A binary-search tree accepting any types of classes implementing
- * Comparable<T>. Has methods for adding elements, inserting new elements on the
- * proper position in the tree, searching for elements in the tree and printing
- * the tree on the console using the depth-first search algorithm.
+ * A binary-search, heterogeneous tree accepting any type of classes <T>
+ * implementing Comparable<T> and extending Number. Has methods for inserting
+ * new elements on the proper position in the tree, searching for elements in
+ * the tree and printing the tree on the console using the depth-first search
+ * algorithm.
  * 
- * @param <T>
- *            is a class implementing the Comparable interface
- * @version 1.0
- * @author vtsonev
+ * @version 1.3
+ * @since 10/05/2013
+ * @author v.tsonev
  */
-@SuppressWarnings("unused")
-public class BinarySearchTree<T extends Comparable<T>> {
+@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+public class BinarySearchTree {
 	/**
-	 * Enumerable type telling the method if we are ataching left or right node.
+	 * Enumerable type telling the recursive methods if we are ataching left or
+	 * right node.
 	 */
 	private enum Position {
 		RIGHT, LEFT
 	}
+
 	private final Node root;
 
 	/**
-	 * One-parameter constructor.
-	 * @param a is the value to be inserted at the root node
+	 * Constructs the tree taking the value of the root node.
+	 * 
+	 * @param a
+	 *            is the value to be inserted at the root node
+	 * @param <T>
+	 *            is any class extending Number and implementing Comparable.
+	 *            Designed for the java primitive wrapper classes
 	 */
-	public BinarySearchTree(T a) {
+	public <T extends Number & Comparable<T>> BinarySearchTree(T a) {
 		this.root = new Node(a);
 	}
 
 	/**
-	 * Adding an element to the tree. Beginning the recursion with the root
-	 * node.
-	 *
+	 * Adds a new element on the proper position in the tree. Begins the
+	 * recursive algorithm with the root node.
+	 * 
 	 * @param value
 	 *            is the value to be inserted in the tree
+	 * @param <T>
+	 *            is any class extending Number and implementing Comparable.
+	 *            Designed for the java primitive wrapper classes
 	 */
-	public void addElement(T value) {
-		int compare = value.compareTo(this.root.value);
+	public <T extends Number & Comparable<T>> void addElement(T value) {
+		// Typecast the input value and the current root value to Double
+		// before making the comparison, in order to avoid
+		// ClassCastException and information loss.
+		Double valCompareTo = this.root.value.doubleValue();
+		Double toAdd = value.doubleValue();
+		int compare = toAdd.compareTo(valCompareTo);
 		if (compare > 0) {
 			addElement(value, null, this.root, Position.RIGHT);
 		} else {
@@ -46,7 +61,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	}
 
 	/**
-	 * Recursive method adding the given value into the binary search tree.
+	 * Adds the given value on the proper position into the binary search tree.
 	 * 
 	 * @param value
 	 *            is the value to be added to the tree
@@ -55,10 +70,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	 * @param node
 	 *            is the current node
 	 * @param nodePos
-	 *            is telling the method if we are attaching left or right child
+	 *            tells the method if we are attaching left or right child
+	 * @param <T>
+	 *            is any class extending Number and implementing Comparable.
+	 *            Designed for the java primitive wrapper classes
 	 */
-	private void addElement(T value, Node parent, Node node,
- Position nodePos) {
+	private <T extends Number & Comparable> void addElement(T value,
+			Node parent, Node node, Position nodePos) {
 		if (node == null) {
 			if (nodePos == Position.LEFT) {
 				parent.left = new Node(value);
@@ -66,12 +84,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
 			} else if (nodePos == Position.RIGHT) {
 				parent.right = new Node(value);
 				parent.right.setParent(parent);
-
 			}
 		} else {
-			if (value.compareTo(node.value) < 0) {
+			// Typecast the input value and the current node's value to Double
+			// before making the comparison, in order to avoid
+			// ClassCastException and information loss.
+			Double valCompareTo = node.value.doubleValue();
+			Double toAdd = value.doubleValue();
+			if (toAdd.compareTo(valCompareTo) < 0) {
 				addElement(value, node, node.left, Position.LEFT);
-			} else if (value.compareTo(node.value) > 0) {
+			} else if (toAdd.compareTo(valCompareTo) > 0) {
 				addElement(value, node, node.right, Position.RIGHT);
 			}
 		}
@@ -82,12 +104,17 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	 * 
 	 * @param value
 	 *            is the value to search for
+	 * @param <T>
+	 *            is any class extending Number and implementing Comparable.
+	 *            Designed for the java primitive wrapper classes
 	 * @return a reference to the node with the given value or null if no such
 	 */
-	public Node find(T value) {
+	public <T extends Number & Comparable> Node find(T value) {
 		Node node = this.root;
 		while (node != null) {
-			int compare = value.compareTo(node.value);
+			Double valCompareTo = node.value.doubleValue();
+			Double toAdd = value.doubleValue();
+			int compare = toAdd.compareTo(valCompareTo);
 			if (compare < 0) {
 				node = node.left;
 			} else {
@@ -101,7 +128,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		}
 		return node;
 	}
-	
+
 	/**
 	 * Prints all tree nodes on the console. Begin the recursion with the root
 	 * node.
@@ -111,14 +138,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	}
 
 	/**
-	 * Printing all tree nodes using recursion and the depth-first search
+	 * Prints all tree nodes using recursion and the depth-first search
 	 * algorithm.
 	 * 
 	 * @param node
 	 *            is the curent node to be printed
 	 * @param spaces
-	 *            is the left offset to print and a text telling the user if
-	 *            it's a right or left child node
+	 *            is the left offset to print on the console and a text telling
+	 *            the user if it's a right or left child node
 	 */
 	private void print(Node node, String spaces) {
 		if (node == null) {
@@ -130,17 +157,19 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	}
 
 	/**
-	 * A binary node. Has left and right child nodes only.
+	 * A binary node. The primary carrier of data in the tree. Has left and
+	 * right child nodes only. The right child is always bigger than the left.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private class Node implements Comparable<Node> {
+	private class Node<T extends Number & Comparable<T>> implements
+			Comparable<Node> {
 		private final T value;
 		private Node parent;
 		private Node left;
 		private Node right;
 
 		/**
-		 * One-parameter constructor.
+		 * Constructs the node taking its value.
+		 * 
 		 * @param value
 		 *            is the value to be inserted to the node
 		 */
@@ -156,7 +185,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		public Node getParent() {
 			return parent;
 		}
-		
+
 		/**
 		 * A setter method for the parent node.
 		 * 
@@ -184,7 +213,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		public Node getRight() {
 			return right;
 		}
-		
+
 		/**
 		 * Overrides the toString method to return the value of the node.
 		 * 
@@ -194,9 +223,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		public String toString() {
 			return this.value.toString();
 		}
-		
+
 		/**
-		 * Overriding the compareTo method to compare the values of the nodes.
+		 * Overrides the compareTo method to compare the values of the nodes.
 		 * 
 		 * @param other
 		 *            is the other node to compare to
@@ -204,7 +233,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		 */
 		@Override
 		public int compareTo(Node other) {
-			return this.value.compareTo(other.value);
+			return this.value.compareTo((T) other.value);
 		}
 
 		@Override

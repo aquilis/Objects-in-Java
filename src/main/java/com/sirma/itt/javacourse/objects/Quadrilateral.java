@@ -2,8 +2,6 @@ package com.sirma.itt.javacourse.objects;
 
 /**
  * Implemets a geometric quadriliteral.
- * 
- * @author vtsonev
  */
 @SuppressWarnings("unused")
 public class Quadrilateral extends Parallelogram {

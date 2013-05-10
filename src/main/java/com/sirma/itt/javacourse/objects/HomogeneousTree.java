@@ -17,14 +17,14 @@ public class HomogeneousTree<T> {
 	/**
 	 * A getter for the root node.
 	 * 
-	 * @return the root node of the current tree.
+	 * @return a reference to the root node of the tree.
 	 */
 	public Node<T> getRoot() {
 		return root;
 	}
 
 	/**
-	 * one-parameter constructor.
+	 * Constructs the tree with the initial value of the root node.
 	 * 
 	 * @param value
 	 *            is the value to be insterted to the root
@@ -34,12 +34,14 @@ public class HomogeneousTree<T> {
 	}
 
 	/**
+	 * Constructs the tree with the value of the root node and an input tree to
+	 * be attached as a child to the root.
+	 * 
 	 * @param value
 	 *            is the value to be insterted to the root node
 	 * @param children
 	 *            is an array of trees to be insterted as children of teh root
 	 */
-
 	@SafeVarargs
 	public HomogeneousTree(T value, HomogeneousTree<T>... children) {
 		this(value);
@@ -49,7 +51,8 @@ public class HomogeneousTree<T> {
 	}
 
 	/**
-	 * Using recursion, print the given Node and all its children.
+	 * Print the tree with all of its children using the depth-fist search
+	 * recursive algorithm.
 	 * 
 	 * @param root
 	 *            is the node the be printed
@@ -71,7 +74,8 @@ public class HomogeneousTree<T> {
 	}
 
 	/**
-	 * Begins recursion for printing all children of the tree.
+	 * A public method available for the user, that starts the print recursion
+	 * with the root node.
 	 */
 	public void print() {
 		print(this.root, "");
@@ -87,8 +91,9 @@ public class HomogeneousTree<T> {
 	private class Node<T> {
 		private final T value;
 		private ArrayList<Node<T>> children;
+		
 		/**
-		 * One parameters constructor.
+		 * Constructs the node with an initial value.
 		 * 
 		 * @param value
 		 *            is the value to be insterted
@@ -98,7 +103,8 @@ public class HomogeneousTree<T> {
 		}
 
 		/**
-		 * A two-parameters constructor.
+		 * Constructs the node with an initial value and an array of nodes to be
+		 * attached as children.
 		 * 
 		 * @param value
 		 *            is the value to be insterted in the node.

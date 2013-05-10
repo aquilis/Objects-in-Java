@@ -2,8 +2,6 @@ package com.sirma.itt.javacourse.objects;
 
 /**
  * Implemets a geometric 2-dimensional point.
- * 
- * @author vtsonev
  */
 public class Point {
 

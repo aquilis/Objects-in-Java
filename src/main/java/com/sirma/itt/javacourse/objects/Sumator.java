@@ -6,8 +6,6 @@ import java.math.BigInteger;
 /**
  * A utility class implemeting methods for finding the sum of different data
  * types and numeric classes.
- * 
- * @author vtsonev
  */
 public final class Sumator {
 	/**

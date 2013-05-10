@@ -2,8 +2,6 @@ package com.sirma.itt.javacourse.objects;
 
 /**
  * Implementing a geometric circle.
- * 
- * @author vtsonev.
  */
 @SuppressWarnings("unused")
 public class Circle extends Figure {
@@ -35,5 +33,4 @@ public class Circle extends Figure {
 	public void draw() {
 
 	}
-
 }

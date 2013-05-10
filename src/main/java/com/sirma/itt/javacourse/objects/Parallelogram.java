@@ -2,9 +2,6 @@ package com.sirma.itt.javacourse.objects;
 
 /**
  * Implemets a geometric parallelogram.
- * 
- * @version 16/4/2013
- * @author vtsonev
  */
 public class Parallelogram extends Rectangle {
 
