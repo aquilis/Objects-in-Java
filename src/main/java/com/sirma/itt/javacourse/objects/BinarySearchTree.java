@@ -1,39 +1,26 @@
 package com.sirma.itt.javacourse.objects;
 
 /**
- * A binary-search, heterogeneous tree accepting any type of classes <T>
- * implementing Comparable<T> and extending Number. Has methods for inserting
- * new elements on the proper position in the tree, searching for elements in
- * the tree and printing the tree on the console using the depth-first search
- * algorithm.
+ * A binary-search, self-balancing (AVL), heterogeneous tree accepting any type
+ * of classes <T> implementing Comparable<T> and extending Number. The methods
+ * available for the user are: inserting new elements on the proper position in
+ * the tree, searching for elements in the tree and printing the tree on the
+ * console using the depth-first search algorithm.
  * 
- * @version 1.3
- * @since 10/05/2013
+ * @version 1.5
+ * @since 15/05/2013
  * @author v.tsonev
  */
 @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 public class BinarySearchTree {
-	/**
-	 * Enumerable type telling the recursive methods if we are ataching left or
-	 * right node.
-	 */
-	private enum Position {
-		RIGHT, LEFT
-	}
 
-	private final Node root;
+	private Node root;
 
 	/**
-	 * Constructs the tree taking the value of the root node.
-	 * 
-	 * @param a
-	 *            is the value to be inserted at the root node
-	 * @param <T>
-	 *            is any class extending Number and implementing Comparable.
-	 *            Designed for the java primitive wrapper classes
+	 * Constructs the tree, setting its root node to null.
 	 */
-	public <T extends Number & Comparable<T>> BinarySearchTree(T a) {
-		this.root = new Node(a);
+	public BinarySearchTree() {
+		this.root = null;
 	}
 
 	/**
@@ -47,17 +34,11 @@ public class BinarySearchTree {
 	 *            Designed for the java primitive wrapper classes
 	 */
 	public <T extends Number & Comparable<T>> void addElement(T value) {
-		// Typecast the input value and the current root value to Double
-		// before making the comparison, in order to avoid
-		// ClassCastException and information loss.
-		Double valCompareTo = this.root.value.doubleValue();
-		Double toAdd = value.doubleValue();
-		int compare = toAdd.compareTo(valCompareTo);
-		if (compare > 0) {
-			addElement(value, null, this.root, Position.RIGHT);
-		} else {
-			addElement(value, null, this.root, Position.LEFT);
+		if (value == null) {
+			throw new IllegalArgumentException(
+					"Can't insert a null value into the tree");
 		}
+		this.root = addElement(root, value);
 	}
 
 	/**
@@ -65,38 +46,188 @@ public class BinarySearchTree {
 	 * 
 	 * @param value
 	 *            is the value to be added to the tree
-	 * @param parent
-	 *            is the parent node of the new node
 	 * @param node
 	 *            is the current node
-	 * @param nodePos
-	 *            tells the method if we are attaching left or right child
 	 * @param <T>
 	 *            is any class extending Number and implementing Comparable.
 	 *            Designed for the java primitive wrapper classes
+	 * @return a reference to the newly inserted node, or to the newly placed
+	 *         node on that position, if the tree gets rebalanced
 	 */
-	private <T extends Number & Comparable> void addElement(T value,
-			Node parent, Node node, Position nodePos) {
+	private <T extends Number & Comparable> Node addElement(Node node, T value) {
 		if (node == null) {
-			if (nodePos == Position.LEFT) {
-				parent.left = new Node(value);
-				parent.left.setParent(parent);
-			} else if (nodePos == Position.RIGHT) {
-				parent.right = new Node(value);
-				parent.right.setParent(parent);
-			}
+			return new Node(value);
 		} else {
 			// Typecast the input value and the current node's value to Double
 			// before making the comparison, in order to avoid
 			// ClassCastException and information loss.
 			Double valCompareTo = node.value.doubleValue();
 			Double toAdd = value.doubleValue();
-			if (toAdd.compareTo(valCompareTo) < 0) {
-				addElement(value, node, node.left, Position.LEFT);
-			} else if (toAdd.compareTo(valCompareTo) > 0) {
-				addElement(value, node, node.right, Position.RIGHT);
+			int compareTo = toAdd.compareTo(valCompareTo);
+			if (compareTo < 0) {
+				node.setLeft(addElement(node.left, value));
+			} else if (compareTo > 0) {
+				node.setRight(addElement(node.right, value));
 			}
 		}
+		// Compute heights of the left and right subtrees
+		// and rebalance the tree if needed
+		int leftHeight = getHeight(node.left);
+		int rightHeight = getHeight(node.right);
+		if (Math.abs(leftHeight - rightHeight) == 2) {
+			return balance(node);
+		} else {
+			node.resetHeight();
+			return node;
+		}
+	}
+
+	/**
+	 * Returns the height of the given AVL subtree. Height is the count of all
+	 * children of the subtree.
+	 * 
+	 * @param tree
+	 *            An AVL subtree.
+	 * @return The height of the AVL subtree.
+	 */
+
+	private static int getHeight(Node tree) {
+		if (tree == null)
+			return -1;
+		else
+			return tree.height;
+	}
+
+	/**
+	 * Calculates what rebalancing has to be made to the tree, and performs the
+	 * appropiate operation.
+	 * 
+	 * @param node
+	 *            The AVL subtree to be balanced.
+	 * @return The balanced subAVL tree.
+	 */
+
+	private Node balance(Node node) {
+		int rHeight = getHeight(node.right);
+		int lHeight = getHeight(node.left);
+
+		if (rHeight > lHeight) {
+			Node rightChild = node.right;
+			int rrHeight = getHeight(rightChild.right);
+			int rlHeight = getHeight(rightChild.left);
+			if (rrHeight > rlHeight)
+				return rotateRight(node);
+			else
+				return rotateDoubleRight(node);
+		} else {
+			Node leftChild = node.left;
+			int llHeight = getHeight(leftChild.left);
+			int lrHeight = getHeight(leftChild.right);
+			if (llHeight > lrHeight)
+				return rotateLeft(node);
+			else
+				return rotateDoubleLeft(node);
+		}
+	}
+
+	/**
+	 * Performs a right rotation to the subtree. The right child of the node
+	 * becomes the new root and the old root node gets attached as its left
+	 * child.
+	 * 
+	 * @param node
+	 *            The AVL tree wih an RR imbalance.
+	 * @return The balanced AVL tree.
+	 */
+
+	private Node rotateRight(Node node) {
+		Node rightChild = node.right;
+		Node rightLeftChild = rightChild.left;
+		rightChild.left = node;
+		node.right = rightLeftChild;
+		node.resetHeight();
+		rightChild.resetHeight();
+		return rightChild;
+	}
+
+	/**
+	 * Performs a double right rotation. The right subtree of the tree is
+	 * left-heavy, so the method balances the entite subtree.
+	 * 
+	 * @param node
+	 *            The AVL tree with an RL imbalance.
+	 * @return The balanced AVL tree.
+	 */
+
+	private Node rotateDoubleRight(Node node) {
+		Node root = node;
+		Node rNode = root.right;
+		Node rlNode = rNode.left;
+		Node rlrTree = rlNode.right;
+		Node rllTree = rlNode.left;
+
+		// Build the restructured tree
+		rNode.left = rlrTree;
+		root.right = rllTree;
+		rlNode.left = root;
+		rlNode.right = rNode;
+
+		// Adjust heights
+		rNode.resetHeight();
+		root.resetHeight();
+		rlNode.resetHeight();
+
+		return rlNode;
+	}
+
+	/**
+	 * Performs a left rotation to the subtree. The left child of the node
+	 * becomes the new root and the old root node gets attached as its right
+	 * child.
+	 * 
+	 * @param node
+	 *            The AVL tree with an LL imbalance.
+	 * @return The balanced AVL tree.
+	 */
+
+	private Node rotateLeft(Node node) {
+		Node leftChild = node.left;
+		Node lrTree = leftChild.right;
+		leftChild.right = node;
+		node.left = lrTree;
+		node.resetHeight();
+		leftChild.resetHeight();
+		return leftChild;
+	}
+
+	/**
+	 * Performs a double left rotation to the subtree. The left subtree of the
+	 * given node is right-heavy, so the method balances the entire subtree.
+	 * 
+	 * @param node
+	 *            The AVL tree with an LR imbalance.
+	 * @return The new root node of the balanced AVL tree.
+	 */
+
+	private Node rotateDoubleLeft(Node node) {
+		Node root = node;
+		Node lNode = root.left;
+		Node lrNode = lNode.right;
+		Node lrlTree = lrNode.left;
+		Node lrrTree = lrNode.right;
+
+		// Build the restructured tree
+		lNode.right = lrlTree;
+		root.left = lrrTree;
+		lrNode.left = lNode;
+		lrNode.right = root;
+
+		// Adjust heights
+		lNode.resetHeight();
+		root.resetHeight();
+		lrNode.resetHeight();
+
+		return lrNode;
 	}
 
 	/**
@@ -158,7 +289,8 @@ public class BinarySearchTree {
 
 	/**
 	 * A binary node. The primary carrier of data in the tree. Has left and
-	 * right child nodes only. The right child is always bigger than the left.
+	 * right child nodes only. The right child's key value is always bigger than
+	 * the left.
 	 */
 	private class Node<T extends Number & Comparable<T>> implements
 			Comparable<Node> {
@@ -166,6 +298,7 @@ public class BinarySearchTree {
 		private Node parent;
 		private Node left;
 		private Node right;
+		private int height;
 
 		/**
 		 * Constructs the node taking its value.
@@ -175,6 +308,16 @@ public class BinarySearchTree {
 		 */
 		public Node(T value) {
 			this.value = value;
+			this.height = 0;
+		}
+
+		/**
+		 * Recalculates the height if the left or right subtrees have changed.
+		 */
+		void resetHeight() {
+			int leftHeight = BinarySearchTree.getHeight(left);
+			int rightHeight = BinarySearchTree.getHeight(right);
+			height = 1 + Math.max(leftHeight, rightHeight);
 		}
 
 		/**
@@ -197,12 +340,32 @@ public class BinarySearchTree {
 		}
 
 		/**
+		 * A setter for the left child node.
+		 * 
+		 * @param left
+		 *            is the node to be inserted as a left child
+		 */
+		public void setLeft(Node left) {
+			this.left = left;
+		}
+
+		/**
 		 * A getter method for the left child node.
 		 * 
 		 * @return the left node
 		 */
 		public Node getLeft() {
 			return left;
+		}
+
+		/**
+		 * A setter for the right child node.
+		 * 
+		 * @param right
+		 *            is the node to be inserted as a right child
+		 */
+		public void setRight(Node right) {
+			this.right = right;
 		}
 
 		/**
